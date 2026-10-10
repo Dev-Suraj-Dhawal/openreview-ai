@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenReview.AI Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans text-gray-900">
+    <nav class="bg-blue-900 text-white p-4 shadow-md">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wider">OpenReview.AI</h1>
+            <span class="text-sm bg-blue-700 px-3 py-1 rounded">Hacktoberfest Edition</span>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+        <!-- Submission Form -->
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <h2 class="text-lg font-bold mb-4">Simulate Pull Request</h2>
+            <form id="prForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">GitHub Username</label>
+                    <input type="text" id="author" value="octocat" class="w-full border p-2 rounded focus:outline-blue-500" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">PR Title</label>
+                    <input type="text" id="title" value="Fix database connection leak" class="w-full border p-2 rounded focus:outline-blue-500" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Code Diff (Patch)</label>
+                    <textarea id="diff" rows="6" class="w-full border p-2 rounded font-mono text-sm focus:outline-blue-500" required>
+- db = connect("localhost:5432")
++ db = connect_with_pool("localhost:5432", max_connections=10)
++ defer db.close()
+                    </textarea>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition">
+                    Run AI Review & Log to Hedera
+                </button>
+            </form>
+        </div>
+
+        <!-- Results Display -->
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 h-full">
+            <h2 class="text-lg font-bold mb-4">Output Log</h2>
+            <div id="result" class="text-gray-500 text-sm italic">
+                Awaiting PR submission...
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('prForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            
+            btn.innerText = "Processing (AI + Hedera)...";
+            btn.disabled = true;
+            resultDiv.innerHTML = `<p class="text-blue-600 animate-pulse">Analyzing code diff...</p>`;
+            
+            const payload = {
+                author: document.getElementById('author').value,
+                title: document.getElementById('title').value,
+                diff: document.getElementById('diff').value
+            };
+            
+            try {
+                const res = await fetch('/api/review', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="p-4 bg-green-50 border border-green-200 rounded mb-4">
+                        <h3 class="font-bold text-green-900 text-sm">Decentralized Log (Hedera HCS)</h3>
+                        <p class="text-xs font-mono mt-1 text-green-800 break-all">${data.hedera_receipt}</p>
+                        ${data.tx_url ? `<a href="${data.tx_url}" target="_blank" class="text-blue-600 underline text-xs mt-2 inline-block">Verify on Hashscan Explorer &rarr;</a>` : ''}
+                    </div>
+                    <div class="p-4 bg-gray-50 border rounded">
+                        <h3 class="font-bold text-sm mb-2">AI Agent Review</h3>
+                        <pre class="whitespace-pre-wrap text-sm text-gray-700 font-sans">${data.ai_review}</pre>
+                    </div>
+                `;
+            } catch (err) {
+                resultDiv.innerHTML = `<p class="text-red-600">Error connecting to backend.</p>`;
+            } finally {
+                btn.innerText = "Run AI Review & Log to Hedera";
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
