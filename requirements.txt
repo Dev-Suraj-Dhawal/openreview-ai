@@ -5,3 +5,4 @@ pydantic
 python-dotenv
 hiero-sdk-python
 jinja2
+google-genai
