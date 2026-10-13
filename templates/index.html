@@ -5,186 +5,241 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenReview.AI | Code Verification</title>
     
-    <!-- Google Fonts for that Dev Aesthetic -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS (Native Utilities Only for 100% Reliability) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        background: '#000000',
-                        surface: '#0A0A0A',
-                        panel: '#111111',
-                        border: '#222222',
-                        accent: '#EDEDED',
-                        muted: '#888888',
-                        success: '#10B981',
-                    }
-                }
-            }
-        }
-    </script>
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        body {
-            background-color: theme('colors.background');
-            color: theme('colors.accent');
-        }
-        /* Custom scrollbar for textareas */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #52525b; }
         
-        .glass-panel {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-            border: 1px solid theme('colors.border');
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        /* Floating Animation for Ambient Orbs */
+        @keyframes float-slow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, -40px) scale(1.1); }
         }
-
-        .input-glow:focus-within {
-            border-color: #555;
-            box-shadow: 0 0 15px rgba(255,255,255,0.05);
+        .animate-float {
+            animation: float-slow 8s infinite alternate ease-in-out;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-white selection:text-black">
+<body class="bg-neutral-950 text-neutral-100 min-h-screen flex flex-col antialiased selection:bg-violet-500/30 selection:text-white relative overflow-x-hidden font-sans">
 
-    <!-- Navbar -->
-    <nav class="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+    <!-- Ambient Background Glows -->
+    <div class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-violet-600/20 rounded-full blur-[120px] -z-10 animate-float"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-cyan-600/20 rounded-full blur-[120px] -z-10 animate-float" style="animation-delay: -4s;"></div>
+
+    <!-- Floating Pill Navbar -->
+    <nav class="w-full max-w-5xl mx-auto px-4 pt-6 z-50">
+        <!-- Replaced background with native Tailwind zinc colors for guaranteed contrast -->
+        <div class="bg-neutral-900/70 backdrop-blur-2xl rounded-full h-16 px-6 flex items-center justify-between border border-neutral-700/50 shadow-2xl">
+            
+            <!-- New Fresh Logo Section -->
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-md bg-white flex items-center justify-center">
-                    <i data-lucide="cpu" class="text-black w-5 h-5"></i>
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)] border border-white/10">
+                    <i data-lucide="brain-circuit" class="text-white w-5 h-5"></i>
                 </div>
-                <span class="font-semibold tracking-tight text-lg">OpenReview.AI</span>
-            </div>
-            <div class="flex items-center gap-4">
-                <span class="px-3 py-1 text-xs font-medium bg-[#111] border border-border rounded-full text-muted flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-                    Hacktoberfest Edition
+                <span class="font-[Space_Grotesk] font-bold text-xl tracking-wide text-white drop-shadow-md">
+                    OpenReview<span class="text-cyan-400">.AI</span>
                 </span>
-                <a href="https://github.com/Dev-Suraj-Dhawal" target="_blank" class="text-muted hover:text-white transition-colors">
-                    <i data-lucide="github" class="w-5 h-5"></i>
+            </div>
+
+            <!-- Enhanced Action Buttons -->
+            <div class="flex items-center gap-3">
+                <span class="hidden sm:flex px-4 py-1.5 text-xs font-bold bg-neutral-800/50 border border-neutral-700 rounded-full text-neutral-300 items-center gap-2 uppercase tracking-widest shadow-inner">
+                    <span class="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse"></span>
+                    Hacktoberfest
+                </span>
+                
+                <!-- New Styled GitHub Button -->
+                <a href="https://github.com/Dev-Suraj-Dhawal" target="_blank" class="group flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100 hover:bg-white text-neutral-950 font-semibold transition-all shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                    <span class="text-sm">GitHub</span>
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="flex-grow max-w-7xl mx-auto w-full px-6 py-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Main Content: Bento Layout -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-12 grid grid-cols-1 lg:grid-cols-2 gap-8 z-10">
         
         <!-- Left Column: Input Form -->
-        <div class="flex flex-col gap-6">
+        <div class="bg-neutral-900/40 backdrop-blur-xl border border-neutral-800 rounded-[2.5rem] p-8 flex flex-col gap-8 shadow-2xl relative overflow-hidden">
             <div>
-                <h1 class="text-2xl font-semibold tracking-tight mb-2">Simulate Pull Request</h1>
-                <p class="text-muted text-sm">Submit a code diff for AI analysis and immutable Hedera logging.</p>
+                <h1 class="text-3xl font-[Space_Grotesk] font-bold text-white mb-2">Initialize Review</h1>
+                <p class="text-neutral-400 text-sm font-medium">Inject your code diff for algorithmic analysis.</p>
             </div>
 
-            <!-- Replace 'YOUR_FORM_ACTION' if you are using standard form submission, or attach your JS event listeners to this form ID -->
-            <form id="reviewForm" method="POST" action="/" class="glass-panel rounded-xl p-6 flex flex-col gap-5">
+            <form id="prForm" class="flex flex-col gap-6">
                 
-                <div class="space-y-2 input-glow transition-all rounded-lg">
-                    <label class="text-xs font-medium text-muted uppercase tracking-wider">GitHub Username</label>
-                    <div class="relative">
-                        <i data-lucide="user" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted"></i>
-                        <input type="text" name="github_username" placeholder="hacktoberfest_reviewer" required
-                            class="w-full bg-surface border border-border rounded-lg pl-10 pr-4 py-2.5 text-sm outline-none placeholder:text-muted/50 focus:border-white/30 transition-colors">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-neutral-500 uppercase tracking-widest ml-1">Author Handle</label>
+                    <div class="relative group">
+                        <i data-lucide="at-sign" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500 group-focus-within:text-cyan-400 z-10 transition-colors"></i>
+                        <input type="text" id="author" value="hacktoberfest_reviewer" required
+                            class="w-full bg-neutral-950/50 border border-neutral-700 rounded-2xl pl-12 pr-4 py-3.5 text-sm text-white outline-none placeholder:text-neutral-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 shadow-inner transition-all">
                     </div>
                 </div>
 
-                <div class="space-y-2 input-glow transition-all rounded-lg">
-                    <label class="text-xs font-medium text-muted uppercase tracking-wider">PR Title</label>
-                    <div class="relative">
-                        <i data-lucide="git-pull-request" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted"></i>
-                        <input type="text" name="pr_title" placeholder="Feature: Add user authentication endpoint" required
-                            class="w-full bg-surface border border-border rounded-lg pl-10 pr-4 py-2.5 text-sm outline-none placeholder:text-muted/50 focus:border-white/30 transition-colors">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-neutral-500 uppercase tracking-widest ml-1">Request Title</label>
+                    <div class="relative group">
+                        <i data-lucide="git-merge" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500 group-focus-within:text-violet-400 z-10 transition-colors"></i>
+                        <input type="text" id="title" value="Feature: Add user authentication endpoint" required
+                            class="w-full bg-neutral-950/50 border border-neutral-700 rounded-2xl pl-12 pr-4 py-3.5 text-sm text-white outline-none placeholder:text-neutral-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 shadow-inner transition-all">
                     </div>
                 </div>
 
-                <div class="space-y-2 flex-grow flex flex-col input-glow transition-all rounded-lg">
-                    <label class="text-xs font-medium text-muted uppercase tracking-wider flex justify-between">
-                        <span>Code Diff (Patch)</span>
-                        <span class="lowercase normal-case text-muted/50"><i data-lucide="code-2" class="inline w-3 h-3 mr-1"></i>Markdown supported</span>
+                <div class="space-y-2 flex-grow flex flex-col">
+                    <label class="text-xs font-bold text-neutral-500 uppercase tracking-widest ml-1 flex justify-between">
+                        <span>Patch Data</span>
+                        <i data-lucide="terminal" class="w-3 h-3 text-neutral-600"></i>
                     </label>
-                    <textarea name="code_diff" rows="8" required placeholder="+ def authenticate_user(username, password):&#10;+     query = f'SELECT * FROM users...'&#10;+     result = db.execute(query)"
-                        class="w-full flex-grow bg-[#050505] border border-border rounded-lg p-4 text-sm font-mono text-[#E5E5E5] outline-none placeholder:text-muted/30 focus:border-white/30 transition-colors resize-y leading-relaxed"></textarea>
+                    <textarea id="diff" rows="7" required class="w-full flex-grow bg-neutral-950/50 border border-neutral-700 rounded-2xl p-5 text-sm text-white font-mono outline-none placeholder:text-neutral-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 shadow-inner transition-all resize-y leading-relaxed">+ def authenticate_user(username, password):
++     query = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
++     result = db.execute(query)</textarea>
                 </div>
 
-                <button type="submit" class="w-full bg-white text-black font-medium py-3 px-4 rounded-lg hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2 mt-2">
-                    <i data-lucide="zap" class="w-4 h-4"></i>
-                    Run AI Review & Log to Hedera
+                <!-- Gradient Button -->
+                <button type="submit" id="submitBtn" class="group relative w-full mt-2 bg-gradient-to-r from-violet-600 to-cyan-600 text-white font-bold tracking-wide py-4 px-6 rounded-2xl flex items-center justify-center gap-3 border border-white/10 hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] hover:scale-[1.01] transition-all">
+                    <span>Execute Sequence</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                 </button>
             </form>
         </div>
 
         <!-- Right Column: Output Log -->
-        <div class="flex flex-col gap-6">
+        <div class="bg-neutral-900/40 backdrop-blur-xl border border-neutral-800 rounded-[2.5rem] p-8 flex flex-col gap-6 shadow-2xl">
             <div>
-                <h2 class="text-2xl font-semibold tracking-tight mb-2">Execution Log</h2>
-                <p class="text-muted text-sm">Real-time analysis and blockchain consensus receipts.</p>
+                <h2 class="text-3xl font-[Space_Grotesk] font-bold text-white mb-2">Telemetry</h2>
+                <p class="text-neutral-400 text-sm font-medium">Immutable state and AI diagnostics.</p>
             </div>
 
-            <div class="flex flex-col gap-4">
-                
-                <!-- Use Jinja2 if/else blocks around these output cards depending on how you pass data from FastAPI -->
-                
-                <!-- HEDERA LOG CARD (Render if data exists) -->
-                <!-- <div class="glass-panel rounded-xl p-1 overflow-hidden">
-                    <div class="bg-success/10 border border-success/20 rounded-lg p-5">
-                        <div class="flex items-center gap-2 text-success font-medium mb-3">
-                            <i data-lucide="box" class="w-5 h-5"></i>
-                            Decentralized Log (Hedera HCS)
-                        </div>
-                        <div class="font-mono text-sm text-success/80 mb-4 bg-success/5 p-3 rounded border border-success/10">
-                            {{ hedera_receipt_id }} <!-- Replace with your actual variable -->
-                        </div>
-                        <a href="{{ hashscan_link }}" target="_blank" class="text-xs text-success hover:text-white transition-colors flex items-center gap-1">
-                            Verify on Hashscan Explorer <i data-lucide="external-link" class="w-3 h-3"></i>
-                        </a>
+            <!-- Dynamic JS Container -->
+            <div id="result" class="flex flex-col h-full relative">
+                <!-- Abstract Empty State -->
+                <div class="h-full min-h-[400px] rounded-3xl p-8 flex flex-col items-center justify-center text-center bg-neutral-950/30 border border-neutral-800 border-dashed">
+                    <div class="w-24 h-24 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center mb-6 shadow-inner relative">
+                        <i data-lucide="scan-line" class="w-10 h-10 text-neutral-500"></i>
                     </div>
-                </div> -->
-
-                <!-- AI AGENT REVIEW CARD (Render if data exists) -->
-                <!-- <div class="glass-panel rounded-xl p-6">
-                    <div class="flex items-center gap-2 text-white font-medium mb-4 pb-4 border-b border-border">
-                        <i data-lucide="bot" class="w-5 h-5"></i>
-                        AI Agent Review (Gemini)
-                    </div>
-                    <div class="prose prose-invert prose-sm max-w-none text-muted font-mono leading-relaxed bg-[#050505] p-4 rounded-lg border border-border">
-                        {{ ai_review_text }} <!-- Replace with your actual variable -->
-                    </div>
-                </div> -->
-
-                <!-- Empty State (When no data is present) -->
-                <div class="h-full min-h-[400px] glass-panel rounded-xl p-8 flex flex-col items-center justify-center text-center border-dashed border-2 border-border/50">
-                    <div class="w-16 h-16 rounded-full bg-surface border border-border flex items-center justify-center mb-4 shadow-lg">
-                        <i data-lucide="terminal-square" class="w-8 h-8 text-muted"></i>
-                    </div>
-                    <h3 class="text-white font-medium mb-2">Awaiting Code Submission</h3>
-                    <p class="text-sm text-muted max-w-sm">Submit a pull request patch on the left. The AI analysis and Hedera HCS receipt will appear here.</p>
+                    <h3 class="text-white font-[Space_Grotesk] text-xl mb-2">System Standby</h3>
+                    <p class="text-sm text-neutral-500 max-w-[250px] leading-relaxed">Awaiting patch data for Gemini processing and Hedera consensus.</p>
                 </div>
-
             </div>
         </div>
     </main>
 
-    <!-- Initialize Lucide Icons -->
+    <!-- JS Logic -->
     <script>
         lucide.createIcons();
+
+        document.getElementById('prForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            
+            // Loading State (Bento Style)
+            btn.innerHTML = `
+                <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+                <span>Processing...</span>
+            `;
+            btn.disabled = true;
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            lucide.createIcons();
+            
+            resultDiv.innerHTML = `
+                <div class="h-full min-h-[400px] rounded-3xl p-8 flex flex-col items-center justify-center text-center bg-neutral-950/30 border border-neutral-800">
+                    <div class="w-24 h-24 rounded-full bg-gradient-to-r from-violet-600/20 to-cyan-600/20 border border-violet-500/30 flex items-center justify-center mb-6 animate-pulse shadow-[0_0_30px_rgba(139,92,246,0.2)]">
+                        <i data-lucide="cpu" class="w-10 h-10 text-violet-400"></i>
+                    </div>
+                    <h3 class="text-white font-[Space_Grotesk] text-xl mb-2">Compiling Diagnostics...</h3>
+                    <p class="text-sm text-neutral-400 max-w-[280px] leading-relaxed">Establishing neural link with Gemini and cryptographic consensus with Hedera.</p>
+                </div>
+            `;
+            lucide.createIcons();
+            
+            const payload = {
+                author: document.getElementById('author').value,
+                title: document.getElementById('title').value,
+                diff: document.getElementById('diff').value
+            };
+            
+            try {
+                const res = await fetch('/api/review', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                
+                const linkHtml = data.tx_url 
+                    ? `<a href="${data.tx_url}" target="_blank" class="w-full mt-4 bg-neutral-950/50 hover:bg-black border border-neutral-800 text-cyan-400 text-xs font-bold uppercase tracking-widest py-3 rounded-xl flex items-center justify-center gap-2 transition-colors">View Hashscan Explorer <i data-lucide="arrow-up-right" class="w-3 h-3"></i></a>` 
+                    : '';
+
+                resultDiv.innerHTML = `
+                    <div class="flex flex-col gap-4">
+                        <!-- Bento Box 1: Hedera (Pill shape inner) -->
+                        <div class="bg-emerald-950/20 border border-emerald-900/50 rounded-3xl p-6 relative overflow-hidden">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-8 h-8 rounded-full bg-emerald-900/50 flex items-center justify-center border border-emerald-700/50">
+                                    <i data-lucide="link" class="w-4 h-4 text-emerald-400"></i>
+                                </div>
+                                <h3 class="font-[Space_Grotesk] text-emerald-400 font-bold tracking-wide">Decentralized Log</h3>
+                            </div>
+                            
+                            <div class="bg-neutral-950/60 p-4 rounded-2xl border border-neutral-800 font-mono text-xs text-emerald-200/70 break-all shadow-inner">
+                                ${data.hedera_receipt}
+                            </div>
+                            ${linkHtml}
+                        </div>
+                        
+                        <!-- Bento Box 2: AI Review -->
+                        <div class="bg-neutral-900/50 border border-neutral-800 rounded-3xl p-6 relative overflow-hidden flex-grow shadow-inner">
+                            <div class="flex items-center gap-3 mb-4 pb-4 border-b border-neutral-800">
+                                <div class="w-8 h-8 rounded-full bg-violet-900/30 flex items-center justify-center border border-violet-700/30">
+                                    <i data-lucide="bot-message-square" class="w-4 h-4 text-violet-400"></i>
+                                </div>
+                                <h3 class="font-[Space_Grotesk] text-white font-bold tracking-wide">Agent Diagnostics</h3>
+                            </div>
+                            <pre class="whitespace-pre-wrap text-neutral-300 font-mono text-sm leading-relaxed">${data.ai_review}</pre>
+                        </div>
+                    </div>
+                `;
+                lucide.createIcons();
+
+            } catch (err) {
+                resultDiv.innerHTML = `
+                    <div class="bg-red-950/30 border border-red-900/50 rounded-3xl p-6 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-red-900/50 flex items-center justify-center border border-red-700/50 shrink-0">
+                            <i data-lucide="triangle-alert" class="w-5 h-5 text-red-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-[Space_Grotesk] text-red-400 font-bold mb-1">Connection Refused</h3>
+                            <p class="text-xs text-red-300/70">Failed to establish handshake with the backend API.</p>
+                        </div>
+                    </div>
+                `;
+                lucide.createIcons();
+            } finally {
+                btn.innerHTML = `
+                    <span>Execute Sequence</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                `;
+                btn.disabled = false;
+                btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                lucide.createIcons();
+            }
+        });
     </script>
 </body>
 </html>
